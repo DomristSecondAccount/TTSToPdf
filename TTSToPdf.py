@@ -1,3 +1,5 @@
+#сделать проверку на нули в значениях
+
 import cv2
 import time
 from tkinter import *
@@ -18,6 +20,7 @@ pathToSave = ""
 
 def selectImage():
 	file = filedialog.askopenfilename()
+	textImageCard.delete(0,END)
 	textImageCard.insert(0,file)
 	global imageToConvertPath
 	imageToConvertPath = os.path.abspath(file)
