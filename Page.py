@@ -7,14 +7,27 @@ class Position:
 
 
 class SinglePage:
-	
-	def __init__(self,cardWidth,cardHeight):
+	#default Single pdff page	
+	def __init__(self,cardWidth,cardHeight,cardCountOnHorizontal = 3,cardCountOnVertical = 3):
 		self.countOfFreePositions = 0
-		self.positions = [
-							Position(0,0),Position(float(cardWidth),0),Position(float(cardWidth)*2,0),
-							Position(0,float(cardHeight)),Position(float(cardWidth),float(cardHeight)),Position(float(cardWidth)*2,float(cardHeight)),
-							Position(0,float(cardHeight)*2),Position(float(cardWidth),float(cardHeight)*2),Position(float(cardWidth)*2,float(cardHeight)*2)
-						 ]
+		#default count of cards with grid 3x3
+		if cardCountOnVertical == 3 and cardCountOnHorizontal == 3:
+			self.positions = [
+								Position(0,0),Position(float(cardWidth),0),Position(float(cardWidth)*2,0),
+								Position(0,float(cardHeight)),Position(float(cardWidth),float(cardHeight)),Position(float(cardWidth)*2,float(cardHeight)),
+								Position(0,float(cardHeight)*2),Position(float(cardWidth),float(cardHeight)*2),Position(float(cardWidth)*2,float(cardHeight)*2)
+							 ]
+		else:
+			#must restore only x
+			self.positions = []
+			nextColCardIndex = int(0)
+			for y in range(int(cardCountOnVertical)):
+				for x in range(int(cardCountOnHorizontal)):
+					self.positions.append(Position(nextColCardIndex*cardWidth,y * cardHeight))
+					nextColCardIndex+=1
+				nextColCardIndex = 0
+
+
 
 	def isPageFull(self):
 		for pos in self.positions:
