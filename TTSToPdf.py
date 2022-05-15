@@ -2,6 +2,7 @@ import cv2
 import time
 from tkinter import *
 from tkinter import filedialog
+from tkinter import messagebox
 from fpdf import FPDF
 import os
 from Page import SinglePage
@@ -151,7 +152,6 @@ def beginProcess():
 					mainFrame.moveFrame("right")
 					cv2.imwrite(fileName+str(imageIndex)+".png",crop)
 					newPos = currentPage.getLastFreePos()
-					print(str(newPos))
 					pdf.image(fileName+str(imageIndex)+".png",x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
 					currentCardIndex += 1
 					imageIndex += 1																				
@@ -164,7 +164,8 @@ def beginProcess():
 					break
 		pdf.output("/home/di/FromCardPageToPdfCardsConverter/myPdf.pdf")
 		deleteAllTmps()
-		print("Done Custom")
+		messagebox.showinfo("Состояние процесса", "Преобразование готово")
+		
 
 
 #start gui section
