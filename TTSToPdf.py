@@ -16,7 +16,10 @@ from Frame import *
 
 
 imageToConvertPath = ""
+pathToSavePdf = ""
 pathToSave = ""
+pdfFileName = ""
+pathOfTemplatesImages = ""
 
 def selectImage():
 	file = filedialog.askopenfilename()
@@ -24,7 +27,14 @@ def selectImage():
 	textImageCard.insert(0,file)
 	global imageToConvertPath
 	imageToConvertPath = os.path.abspath(file)
-	print(imageToConvertPath)
+	global pathToSavePdf
+	global pathOfTemplatesImages
+	pathToSavePdf = os.path.dirname(imageToConvertPath)
+	pathOfTemplatesImages = os.path.dirname(imageToConvertPath) + "/"
+	global pdfFileName
+	newPdfFileName = os.path.splitext(imageToConvertPath)[0]
+	pdfFileName = newPdfFileName.split("/")[len(newPdfFileName.split("/")) - 1] + ".pdf"
+	print(pathOfTemplatesImages)
 
 def deleteAllTmps():
 	dirName = os.path.split(imageToConvertPath)[0]
@@ -59,8 +69,7 @@ def beginProcess():
 	frameHeigth = rows/7
 
 	mainFrame = Frame(int(frameWidth),int(frameHeigth))
-	print("Frame width = " + str(mainFrame.frameWidth))
-	print("Frame height = " + str(mainFrame.frameHeight))
+
 	#длинна 88,9 мм; ширина 57,15mm - стандартная игральная карта
 
 	fileName = "FileNumber"
@@ -69,74 +78,9 @@ def beginProcess():
 
 	#вот этот if надо будет потом к херам вырезать, совершенно дегенератский алгоритм
 	if int(countCardOnHorizontalText.get()) == -12 and int(countCardOnVerticalText.get()) == -12: 
-		ceilAndRoundPart = getFullRows(countOfCards)
-
-		for card in range(ceilAndRoundPart[0]):
-
-			pdf.add_page()
-
-			currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf  )
-			
-			for cardIndex in range(9):
-				
-				crop = img[mainFrame.upBorder:mainFrame.downBorder, mainFrame.leftBorder:mainFrame.rightBorder] 
-				cv2.imwrite(fileName+str(imageIndex)+".png",crop)
-				newPos = currentPage.getLastFreePos()
-
-				pdf.image(fileName+str(imageIndex)+".png",x=newPos[0],y =newPos[1],w = cardHeigthForPdf,h = cardHeigthForPdf)
-				mainFrame.moveFrame("right")
-				imageIndex+=1
-
-			mainFrame.moveFrame("beginColumn")
-			mainFrame.moveFrame("down")
-			
-
-		if int(ceilAndRoundPart[1]) > 0:
-
-			pdf.add_page()
-			currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf  )
-
-			for card in range(int(ceilAndRoundPart[1])):
-				
-				crop = img[mainFrame.upBorder:mainFrame.downBorder, mainFrame.leftBorder:mainFrame.rightBorder] 
-				cv2.imwrite(fileName+str(imageIndex)+".png",crop)
-				newPos = currentPage.getLastFreePos()
-
-				pdf.image(fileName+str(imageIndex)+".png",x=newPos[0],y =newPos[1],w = cardWidthForPdf,h = cardHeigthForPdf)
-				mainFrame.moveFrame("right")
-				#leftBorder += widthStep
-				#rightBorder += widthStep
-				imageIndex+=1
-
-		# почему именно 61 - потому-что у меня алгоритм так ебано работает, и если карт будет юольше 612 - то 
-		#захвтится рубашка, листы которой долдны быть на отдельной странице
-
-		if int(countOfCards) < 61: 
-							 
-			pdf.add_page()
-			currentPage = SinglePage(cardWidthForPdf,cardHeigthForPdf)
-			countOfTerationsOfColumns = int(countOfCards)%9
-			
-			mainFrame.moveFrame("endColumn")
-			mainFrame.upBorder = 0
-			mainFrame.downBorder = mainFrame.frameHeight
-
-			for card in range(countOfTerationsOfColumns):
-				crop = img[mainFrame.upBorder:mainFrame.downBorder, mainFrame.leftBorder:mainFrame.rightBorder]
-				cv2.imwrite(fileName+str(imageIndex)+".png",crop)
-				newPos = currentPage.getLastFreePos()
-				pdf.image(fileName+str(imageIndex)+".png",x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
-				mainFrame.moveFrame("down")
-				
-				imageIndex+=1		
-				
-
-		pdf.output("/home/di/FromCardPageToPdfCardsConverter/myPdf.pdf")
-		deleteAllTmps()
-		print("Done")
+		pass
 
 	else:
-		print("Start custom")
 		
 		cntOfCards = int(textCountCard.get())
 		
@@ -153,9 +97,9 @@ def beginProcess():
 				if cntOfCards > 0:
 					crop = img[mainFrame.upBorder:mainFrame.downBorder, mainFrame.leftBorder:mainFrame.rightBorder]
 					mainFrame.moveFrame("right")
-					cv2.imwrite(fileName+str(imageIndex)+".png",crop)
+					cv2.imwrite(pathOfTemplatesImages + fileName+str(imageIndex)+".png",crop)
 					newPos = currentPage.getLastFreePos()
-					pdf.image(fileName+str(imageIndex)+".png",x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
+					pdf.image(pathOfTemplatesImages+fileName+str(imageIndex)+".png",x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
 					currentCardIndex += 1
 					imageIndex += 1																				
 					if currentCardIndex == 11: #если упёрлись в последнюю карту - прыгаем на первую колонку следующего ряда
@@ -165,7 +109,7 @@ def beginProcess():
 					cntOfCards-=1
 				else:
 					break
-		pdf.output("/home/di/FromCardPageToPdfCardsConverter/myPdf.pdf")
+		pdf.output(str(pathToSavePdf )+"/"+pdfFileName)
 		deleteAllTmps()
 		messagebox.showinfo("Состояние процесса", "Преобразование готово")
 		
