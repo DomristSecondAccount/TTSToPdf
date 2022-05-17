@@ -89,6 +89,9 @@ def beginProcess():
 		cardsPerPage = int(countCardOnHorizontalText.get()) * int(countCardOnVerticalText.get())
 		currentCardsPerPage = cardsPerPage
 		
+		cardBack = img[0 + int(frameHeigth)*6:0 + int(frameHeigth)*7,0 +int(frameWidth) * 9:0 + int(frameWidth) * 10]
+		cv2.imwrite(pathOfTemplatesImages + "cardBack.jpg",cardBack)
+
 		while cntOfCards > 0:
 
 			pdf.add_page()
@@ -109,6 +112,18 @@ def beginProcess():
 					cntOfCards-=1
 				else:
 					break
+			if checkCardBackStyle.get() == 0: #если проставлен режим генерации рубашки через каждую страницу
+				pdf.add_page()
+				currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = int(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = int(textCardsSpaceBetweenOnVertical.get()))
+				for card in range(currentCardsPerPage):
+					newPos = currentPage.getLastFreePos()
+					pdf.image(pathOfTemplatesImages + "cardBack.jpg",x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
+		if checkCardBackStyle.get() == 1: #если был выбран способ генерации обложки на последней странице
+			pdf.add_page()
+			currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = int(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = int(textCardsSpaceBetweenOnVertical.get()))
+			for card in range(currentCardsPerPage):
+				newPos = currentPage.getLastFreePos()
+				pdf.image(pathOfTemplatesImages + "cardBack.jpg",x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
 		pdf.output(str(pathToSavePdf )+"/"+pdfFileName)
 		if deleteTeplatesFiles.get() == 1:
 			deleteAllTmps()
@@ -135,13 +150,13 @@ textCountCard.grid(column=1, row=0)
 emptyRow = Label(window, text="")
 emptyRow.grid(column=0, row=1)
 
-widthCardLable = Label(window, text="Ширина карт")
+widthCardLable = Label(window, text="Ширина карт(мм)")
 widthCardLable.grid(column=0, row=2)
 
 textWidthCard = Entry(window,width=10)
 textWidthCard.grid(column=1, row=2)
 
-heightCardLabel = Label(window, text="Высота карт")
+heightCardLabel = Label(window, text="Высота карт(мм)")
 heightCardLabel.grid(column=0, row=3)
 
 textHeightCard = Entry(window,width=10)
@@ -165,13 +180,13 @@ countCardOnVerticalText.grid(column=1, row=6)
 emptyRow = Label(window, text="")
 emptyRow.grid(column=0, row=7)
 
-spaceBetweenCardsOnHorizontal = Label(window, text="Расстояние между картами по горизонтали")
+spaceBetweenCardsOnHorizontal = Label(window, text="Расстояние между картами по горизонтали(мм)")
 spaceBetweenCardsOnHorizontal.grid(column=0, row=8)
 textCardsSpaceBetweenOnHorizontal = Entry(window,width=10)
 textCardsSpaceBetweenOnHorizontal.grid(column=1, row=8)
 
 
-spaceBetweenCardsOnVertical = Label(window, text="Расстояние между картами по вертикали")
+spaceBetweenCardsOnVertical = Label(window, text="Расстояние между картами по вертикали(мм)")
 spaceBetweenCardsOnVertical.grid(column=0, row=9)
 textCardsSpaceBetweenOnVertical = Entry(window,width=10)
 textCardsSpaceBetweenOnVertical.grid(column=1, row=9)
