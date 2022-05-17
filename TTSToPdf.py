@@ -124,6 +124,7 @@ window = Tk()
 window.title("TTSToPdf")
 
 deleteTeplatesFiles = IntVar()
+checkCardBackStyle = IntVar()
 
 countCardLabel = Label(window, text="Количество карт")
 countCardLabel.grid(column=0, row=0)
@@ -131,54 +132,82 @@ countCardLabel.grid(column=0, row=0)
 textCountCard = Entry(window,width=10)
 textCountCard.grid(column=1, row=0)
 
+emptyRow = Label(window, text="")
+emptyRow.grid(column=0, row=1)
+
 widthCardLable = Label(window, text="Ширина карт")
-widthCardLable.grid(column=0, row=1)
+widthCardLable.grid(column=0, row=2)
 
 textWidthCard = Entry(window,width=10)
-textWidthCard.grid(column=1, row=1)
+textWidthCard.grid(column=1, row=2)
 
 heightCardLabel = Label(window, text="Высота карт")
-heightCardLabel.grid(column=0, row=2)
+heightCardLabel.grid(column=0, row=3)
 
 textHeightCard = Entry(window,width=10)
-textHeightCard.grid(column=1, row=2)
+textHeightCard.grid(column=1, row=3)
+
+emptyRow = Label(window, text="")
+emptyRow.grid(column=0, row=4)
 
 countCardOnHorizontalLabel = Label(window, text="Количество карт по горизонтали")
-countCardOnHorizontalLabel.grid(column=0, row=3)
+countCardOnHorizontalLabel.grid(column=0, row=5)
 
 countCardOnHorizontalText = Entry(window,width=10)
-countCardOnHorizontalText.grid(column=1, row=3)
+countCardOnHorizontalText.grid(column=1, row=5)
 
 countCardOnVerticalLabel = Label(window, text="Количество карт по вертикали")
-countCardOnVerticalLabel.grid(column=0, row=4)
+countCardOnVerticalLabel.grid(column=0, row=6)
 
 countCardOnVerticalText= Entry(window,width=10)
-countCardOnVerticalText.grid(column=1, row=4)
+countCardOnVerticalText.grid(column=1, row=6)
+
+emptyRow = Label(window, text="")
+emptyRow.grid(column=0, row=7)
 
 spaceBetweenCardsOnHorizontal = Label(window, text="Расстояние между картами по горизонтали")
-spaceBetweenCardsOnHorizontal.grid(column=0, row=5)
+spaceBetweenCardsOnHorizontal.grid(column=0, row=8)
 textCardsSpaceBetweenOnHorizontal = Entry(window,width=10)
-textCardsSpaceBetweenOnHorizontal.grid(column=1, row=5)
+textCardsSpaceBetweenOnHorizontal.grid(column=1, row=8)
 
 
 spaceBetweenCardsOnVertical = Label(window, text="Расстояние между картами по вертикали")
-spaceBetweenCardsOnVertical.grid(column=0, row=6)
+spaceBetweenCardsOnVertical.grid(column=0, row=9)
 textCardsSpaceBetweenOnVertical = Entry(window,width=10)
-textCardsSpaceBetweenOnVertical.grid(column=1, row=6)
+textCardsSpaceBetweenOnVertical.grid(column=1, row=9)
+
+emptyRow = Label(window, text="")
+emptyRow.grid(column=0, row=10)
 
 deleteTemplatesFilesLabel = Label(window, text="Удалить промежуточные файлы")
-deleteTemplatesFilesLabel.grid(column=0, row=7)
+deleteTemplatesFilesLabel.grid(column=0, row=11)
 
 deleteTemplatesCheckButton = Checkbutton(window,variable =deleteTeplatesFiles )
-deleteTemplatesCheckButton.grid(column=1, row=7)
+deleteTemplatesCheckButton.grid(column=1, row=11)
+
+emptyRow = Label(window, text="")
+emptyRow.grid(column=0, row=12)
+
+cardBackStyleGenerationLAbel = Label(window, text="Вид генерации обложки")
+cardBackStyleGenerationLAbel.grid(column=0, row=13)
+
+radioButtonEveryPage = Radiobutton(window,text = "После каждой страницы",variable = checkCardBackStyle,value = 0) 
+radioButtonEveryPage.grid(column = 1,row = 13)
+radioButtonLastPage = Radiobutton(window,text = "На последней странице файла",variable = checkCardBackStyle,value = 1) 
+radioButtonLastPage.grid(column = 1,row = 14)
+radioButtonNoGenerate = Radiobutton(window,text = "Не генерировать",variable = checkCardBackStyle,value = 2) 
+radioButtonNoGenerate.grid(column = 1,row = 15)
+
+emptyRow = Label(window, text="")
+emptyRow.grid(column=0, row=16)
 
 selectImageButton = Button(window, text="Выбрать файл" ,command = selectImage)
-selectImageButton.grid(column=0, row=8)
+selectImageButton.grid(column=0, row=17)
 textImageCard = Entry(window,width=10)
-textImageCard.grid(column=1, row=8)
+textImageCard.grid(column=1, row=17)
 
 startProcess = Button(window, text="Преобразовать" ,command = beginProcess)
-startProcess.grid(column=0, row=9)
+startProcess.grid(column=0, row=18)
 
 window.mainloop()
 
