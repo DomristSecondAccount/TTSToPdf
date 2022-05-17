@@ -92,7 +92,7 @@ def beginProcess():
 		while cntOfCards > 0:
 
 			pdf.add_page()
-			currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()))
+			currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = int(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = int(textCardsSpaceBetweenOnVertical.get()))
 			for card in range(currentCardsPerPage): #добавляем n карт на последнюю pdf страницу
 				if cntOfCards > 0:
 					crop = img[mainFrame.upBorder:mainFrame.downBorder, mainFrame.leftBorder:mainFrame.rightBorder]
@@ -123,20 +123,20 @@ window.title("TTSToPdf")
 countCardLabel = Label(window, text="Количество карт")
 countCardLabel.grid(column=0, row=0)
 
-widthCardLable = Label(window, text="Ширина карт")
-widthCardLable.grid(column=1, row=0)
-
-heightCardLabel = Label(window, text="Высота карт")
-heightCardLabel.grid(column=2, row=0)
-
 textCountCard = Entry(window,width=10)
-textCountCard.grid(column=0, row=1)
+textCountCard.grid(column=1, row=0)
+
+widthCardLable = Label(window, text="Ширина карт")
+widthCardLable.grid(column=0, row=1)
 
 textWidthCard = Entry(window,width=10)
 textWidthCard.grid(column=1, row=1)
 
+heightCardLabel = Label(window, text="Высота карт")
+heightCardLabel.grid(column=0, row=2)
+
 textHeightCard = Entry(window,width=10)
-textHeightCard.grid(column=2, row=1)
+textHeightCard.grid(column=1, row=2)
 
 countCardOnHorizontalLabel = Label(window, text="Количество карт по горизонтале")
 countCardOnHorizontalLabel.grid(column=0, row=3)
@@ -150,14 +150,24 @@ countCardOnVerticalLabel.grid(column=0, row=4)
 countCardOnVerticalText= Entry(window,width=10)
 countCardOnVerticalText.grid(column=1, row=4)
 
+spaceBetweenCardsOnHorizontal = Label(window, text="Расстояние между картами по горизонтале")
+spaceBetweenCardsOnHorizontal.grid(column=0, row=5)
+textCardsSpaceBetweenOnHorizontal = Entry(window,width=10)
+textCardsSpaceBetweenOnHorizontal.grid(column=1, row=5)
+
+
+spaceBetweenCardsOnVertical = Label(window, text="Расстояние между картами по вертикале")
+spaceBetweenCardsOnVertical.grid(column=0, row=6)
+textCardsSpaceBetweenOnVertical = Entry(window,width=10)
+textCardsSpaceBetweenOnVertical.grid(column=1, row=6)
 
 selectImageButton = Button(window, text="Выбрать файл" ,command = selectImage)
-selectImageButton.grid(column=0, row=5)
+selectImageButton.grid(column=0, row=7)
 textImageCard = Entry(window,width=10)
-textImageCard.grid(column=1, row=5)
+textImageCard.grid(column=1, row=7)
 
 startProcess = Button(window, text="Преобразовать" ,command = beginProcess)
-startProcess.grid(column=0, row=6)
+startProcess.grid(column=0, row=8)
 
 window.mainloop()
 
