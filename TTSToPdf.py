@@ -9,7 +9,7 @@ from fpdf import FPDF
 import os
 from Page import SinglePage
 from Frame import *
-
+import tkinter as tk
 #in tts cards files 
 #cards in rows - 10
 #cards in columns - 7
@@ -110,15 +110,20 @@ def beginProcess():
 				else:
 					break
 		pdf.output(str(pathToSavePdf )+"/"+pdfFileName)
-		deleteAllTmps()
+		if deleteTeplatesFiles.get() == 1:
+			deleteAllTmps()
 		messagebox.showinfo("Состояние процесса", "Преобразование готово")
 		
 
 
 #start gui section
 
+
+
 window = Tk()
 window.title("TTSToPdf")
+
+deleteTeplatesFiles = IntVar()
 
 countCardLabel = Label(window, text="Количество карт")
 countCardLabel.grid(column=0, row=0)
@@ -138,36 +143,42 @@ heightCardLabel.grid(column=0, row=2)
 textHeightCard = Entry(window,width=10)
 textHeightCard.grid(column=1, row=2)
 
-countCardOnHorizontalLabel = Label(window, text="Количество карт по горизонтале")
+countCardOnHorizontalLabel = Label(window, text="Количество карт по горизонтали")
 countCardOnHorizontalLabel.grid(column=0, row=3)
 
 countCardOnHorizontalText = Entry(window,width=10)
 countCardOnHorizontalText.grid(column=1, row=3)
 
-countCardOnVerticalLabel = Label(window, text="Количество карт по вертикале")
+countCardOnVerticalLabel = Label(window, text="Количество карт по вертикали")
 countCardOnVerticalLabel.grid(column=0, row=4)
 
 countCardOnVerticalText= Entry(window,width=10)
 countCardOnVerticalText.grid(column=1, row=4)
 
-spaceBetweenCardsOnHorizontal = Label(window, text="Расстояние между картами по горизонтале")
+spaceBetweenCardsOnHorizontal = Label(window, text="Расстояние между картами по горизонтали")
 spaceBetweenCardsOnHorizontal.grid(column=0, row=5)
 textCardsSpaceBetweenOnHorizontal = Entry(window,width=10)
 textCardsSpaceBetweenOnHorizontal.grid(column=1, row=5)
 
 
-spaceBetweenCardsOnVertical = Label(window, text="Расстояние между картами по вертикале")
+spaceBetweenCardsOnVertical = Label(window, text="Расстояние между картами по вертикали")
 spaceBetweenCardsOnVertical.grid(column=0, row=6)
 textCardsSpaceBetweenOnVertical = Entry(window,width=10)
 textCardsSpaceBetweenOnVertical.grid(column=1, row=6)
 
+deleteTemplatesFilesLabel = Label(window, text="Удалить промежуточные файлы")
+deleteTemplatesFilesLabel.grid(column=0, row=7)
+
+deleteTemplatesCheckButton = Checkbutton(window,variable =deleteTeplatesFiles )
+deleteTemplatesCheckButton.grid(column=1, row=7)
+
 selectImageButton = Button(window, text="Выбрать файл" ,command = selectImage)
-selectImageButton.grid(column=0, row=7)
+selectImageButton.grid(column=0, row=8)
 textImageCard = Entry(window,width=10)
-textImageCard.grid(column=1, row=7)
+textImageCard.grid(column=1, row=8)
 
 startProcess = Button(window, text="Преобразовать" ,command = beginProcess)
-startProcess.grid(column=0, row=8)
+startProcess.grid(column=0, row=9)
 
 window.mainloop()
 

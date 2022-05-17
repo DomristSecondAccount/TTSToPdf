@@ -12,7 +12,7 @@ class Position:
 
 class SinglePage:
 	#default Single pdff page	
-	def __init__(self,cardWidth,cardHeight,cardCountOnHorizontal = 3,cardCountOnVertical = 3,spaceBetweenOnHorizontal = 0,spaceBetweenOnVertical = 0):
+	def __init__(self,cardWidth = 57,cardHeight = 89,cardCountOnHorizontal = 3,cardCountOnVertical = 3,spaceBetweenOnHorizontal = 5,spaceBetweenOnVertical = 5):
 		self.countOfFreePositions = 0
 		centerOfHorizontal = 210 / 2
 		centerOfVertical = 297 / 2
