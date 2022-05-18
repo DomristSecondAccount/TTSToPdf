@@ -1,9 +1,11 @@
+import sys
 import cv2
 import time
 from tkinter import *
 from tkinter import filedialog
 from fpdf import FPDF
 import os
+sys.path.insert(1, 'TTSToPdf')
 from Page import SinglePage
 
 #in tts cards files 
