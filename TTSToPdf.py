@@ -47,10 +47,10 @@ def selectImage():
 	#print(pathOfTemplatesImages)
 
 def deleteAllTmps():
-	dirName = os.path.split(imageToConvertPath)[0]
+	dirName = os.path.split(pathOfTemplatesImages)[0]
 	test = os.listdir(dirName)
 	for item in test:
-		if item.endswith(".png"):
+		if item.endswith(".png") or item.endswith(".jpg"):
 			os.remove(os.path.join(dirName,item))
 
 def beginProcess():
