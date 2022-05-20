@@ -23,6 +23,7 @@ pdfFileName = ""
 pathOfTemplatesImages = ""
 slashs = ""
 
+
 if platform.system() == 'Windows':
 	slashs = '\\'
 else:
@@ -37,11 +38,13 @@ def selectImage():
 	global pathToSavePdf
 	global pathOfTemplatesImages
 	pathToSavePdf = os.path.dirname(imageToConvertPath)
-	pathOfTemplatesImages = os.path.dirname(imageToConvertPath) + slashs
+	pathOfTemplatesImages = os.path.dirname(imageToConvertPath) + slashs + "TemplatesCards" + slashs
+	if not os.path.isdir(pathOfTemplatesImages):
+		os.mkdir(pathOfTemplatesImages)
 	global pdfFileName
 	newPdfFileName = os.path.splitext(imageToConvertPath)[0]
 	pdfFileName = newPdfFileName.split(slashs)[len(newPdfFileName.split(slashs)) - 1] + ".pdf"
-	print(pathOfTemplatesImages)
+	#print(pathOfTemplatesImages)
 
 def deleteAllTmps():
 	dirName = os.path.split(imageToConvertPath)[0]
@@ -103,6 +106,7 @@ def beginProcess():
 					crop = img[mainFrame.upBorder:mainFrame.downBorder, mainFrame.leftBorder:mainFrame.rightBorder]
 					mainFrame.moveFrame("right")
 					cv2.imwrite(pathOfTemplatesImages + fileName+str(imageIndex)+".png",crop)
+					#print("new folder for tmp cards - " + pathOfTemplatesImages + fileName+str(imageIndex)+".png")
 					newPos = currentPage.getLastFreePos()
 					pdf.image(pathOfTemplatesImages+fileName+str(imageIndex)+".png",x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
 					currentCardIndex += 1
