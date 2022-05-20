@@ -1,4 +1,5 @@
 import sys
+import platform
 import cv2
 import time
 from tkinter import *
@@ -20,6 +21,12 @@ pathToSavePdf = ""
 pathToSave = ""
 pdfFileName = ""
 pathOfTemplatesImages = ""
+slashs = ""
+
+if platform.system() == 'Windows':
+	slashs = '\\'
+else:
+	slashs = '/'
 
 def selectImage():
 	file = filedialog.askopenfilename()
@@ -30,10 +37,10 @@ def selectImage():
 	global pathToSavePdf
 	global pathOfTemplatesImages
 	pathToSavePdf = os.path.dirname(imageToConvertPath)
-	pathOfTemplatesImages = os.path.dirname(imageToConvertPath) + "/"
+	pathOfTemplatesImages = os.path.dirname(imageToConvertPath) + slashs
 	global pdfFileName
 	newPdfFileName = os.path.splitext(imageToConvertPath)[0]
-	pdfFileName = newPdfFileName.split("/")[len(newPdfFileName.split("/")) - 1] + ".pdf"
+	pdfFileName = newPdfFileName.split(slashs)[len(newPdfFileName.split(slashs)) - 1] + ".pdf"
 	print(pathOfTemplatesImages)
 
 def deleteAllTmps():
@@ -119,7 +126,7 @@ def beginProcess():
 			for card in range(currentCardsPerPage):
 				newPos = currentPage.getLastFreePos()
 				pdf.image(pathOfTemplatesImages + "cardBack.jpg",x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
-		pdf.output(str(pathToSavePdf )+"/"+pdfFileName)
+		pdf.output(str(pathToSavePdf )+slashs+pdfFileName) #windows shit
 		if deleteTeplatesFiles.get() == 1:
 			deleteAllTmps()
 		messagebox.showinfo("Состояние процесса", "Преобразование готово")
