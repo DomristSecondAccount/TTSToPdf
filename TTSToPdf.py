@@ -1,3 +1,4 @@
+import glob
 import sys
 import platform
 import cv2
@@ -20,14 +21,29 @@ imageToConvertPath = ""
 pathToSavePdf = ""
 pathToSave = ""
 pdfFileName = ""
-pathOfTemplatesImages = ""
 slashs = ""
 
+pathOfFolderWithMultipleImages = ""
+pathOfTemplatesImages = ""
 
 if platform.system() == 'Windows':
 	slashs = '\\'
 else:
 	slashs = '/'
+
+pathOfCardsBack = ""
+def selectBackImage():
+	global pathOfCardsBack
+	pathOfCardsBack = str(filedialog.askopenfilename())
+	textOfCardBackImages.delete(0,END)
+	textOfCardBackImages.insert(0,pathOfCardsBack)
+
+def selectFolderWithMultipleImages():
+	global pathOfFolderWithMultipleImages
+	pathOfFolderWithMultipleImages = str(filedialog.askdirectory())
+	textFolderOfMultipleImages.delete(0,END)
+	textFolderOfMultipleImages.insert(0,pathOfFolderWithMultipleImages)
+
 
 def selectImage():
 	file = filedialog.askopenfilename()
@@ -53,8 +69,120 @@ def deleteAllTmps():
 			os.remove(os.path.join(dirName,item))
 	os.rmdir(pathOfTemplatesImages)
 
+def sewCards():
+	
+	pdf = FPDF()
+
+	cardWidthForPdf = float(textWidthCard.get())
+	cardHeigthForPdf = float(textHeightCard.get())
+	
+	filelist=os.listdir(pathOfFolderWithMultipleImages)
+	listOfImagesPath = []
+	for file in filelist:
+		if file.endswith(".png") or file.endswith(".jpg") :
+			listOfImagesPath.append(str(pathOfFolderWithMultipleImages +slashs+ file))
+	if pathOfCardsBack in listOfImagesPath:
+		listOfImagesPath.remove(pathOfCardsBack)
+
+	countOfCards = len(listOfImagesPath)
+	
+	cardOnHorizontal = int(countCardOnHorizontalText.get())
+	cardOnVertical =  int(countCardOnVerticalText.get())
+	cardsPerPage = int(countCardOnHorizontalText.get()) * int(countCardOnVerticalText.get())
+
+	currentCardPathIndex=0
+	print("Card per [age" + str(cardsPerPage))
+	while countOfCards > 0:
+		
+		pdf.add_page()
+		currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = cardOnHorizontal,cardCountOnVertical = cardOnVertical,spaceBetweenOnHorizontal = int(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = int(textCardsSpaceBetweenOnVertical.get()))
+		
+		for card in range(9):
+			if countOfCards > 0:
+				newPos = currentPage.getLastFreePos()
+				#pdf.image(str(listOfImagesPath[currentCardPathIndex]),x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
+				currentCardPathIndex+=1																		
+				countOfCards-=1
+			else:
+				break
+			#ПРОВЕРКА НА ОБЛОЖКУ
+			if checkCardBackStyle.get() == 0:
+				pdf.add_page()
+				currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = int(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = int(textCardsSpaceBetweenOnVertical.get()),shiftBack = int(shiftCardBackText.get()))
+				for card in range(cardsPerPage):
+					newPos = currentPage.getLastFreePos()
+					pdf.image(pathOfCardsBack,x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
+		#ПРОВЕРКА НА ОБЛОЖКУ
+		if checkCardBackStyle.get() == 1:
+			pdf.add_page()
+			currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = int(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = int(textCardsSpaceBetweenOnVertical.get()))
+			for card in range(cardsPerPage):
+				newPos = currentPage.getLastFreePos()
+				pdf.image(pathOfCardsBack,x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
+	#косяк с сохранением файла
+	pdf.output(str(pathToSavePdf )+slashs+"sewedPdf.pdf") #windows shit
+	#ENDENDEND
+
+def sew2():
+
+	filelist=os.listdir(pathOfFolderWithMultipleImages)
+	listOfImagesPath = []
+	for file in filelist:
+		if file.endswith(".png") or file.endswith(".jpg") :
+			listOfImagesPath.append(str(pathOfFolderWithMultipleImages +slashs+ file))
+	if pathOfCardsBack in listOfImagesPath:
+		listOfImagesPath.remove(pathOfCardsBack)
+
+	countOfCards = len(listOfImagesPath)
+
+	countOfCards = textCountCard.get()
+
+	cardWidthForPdf = float(textWidthCard.get())
+	cardHeigthForPdf = float(textHeightCard.get())
+
+	pdf = FPDF()
+
+	img = cv2.imread(imageToConvertPath)
+	
+	countOfCardsOnHorizontalInFile = int(textCountCardInFileHorizontal.get())
+	countOfCardsOnVerticalInFile = int(textCountCardInFileOnVertical.get())
+
+	cntOfCards = len(listOfImagesPath)
+
+	cardsPerPage = int(countCardOnHorizontalText.get()) * int(countCardOnVerticalText.get())
+	currentCardsPerPage = cardsPerPage
+	
+	currentCardIndex = 0
+
+	while cntOfCards > 0:
+
+		pdf.add_page()
+		currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = int(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = int(textCardsSpaceBetweenOnVertical.get()))
+		for card in range(currentCardsPerPage):
+			if cntOfCards > 0:
+				newPos = currentPage.getLastFreePos()
+				pdf.image(listOfImagesPath[currentCardIndex],x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
+				currentCardIndex += 1
+				cntOfCards-=1
+			else:
+				break
+		if checkCardBackStyle.get() == 0:
+			pdf.add_page()
+			currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = int(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = int(textCardsSpaceBetweenOnVertical.get()),shiftBack = int(shiftCardBackText.get()))
+			for card in range(currentCardsPerPage):
+				newPos = currentPage.getLastFreePos()
+				pdf.image(pathOfCardsBack,x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
+	if checkCardBackStyle.get() == 1:
+		pdf.add_page()
+		currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = int(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = int(textCardsSpaceBetweenOnVertical.get()))
+		for card in range(currentCardsPerPage):
+			newPos = currentPage.getLastFreePos()
+			pdf.image(pathOfCardsBack,x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
+	pdf.output(str(pathOfFolderWithMultipleImages)+slashs+"myNew.pdf")
+	
+	messagebox.showinfo("Состояние процесса", "Преобразование готово")
+
 def beginProcess():
-	print(pathOfTemplatesImages)
 	countOfCards = textCountCard.get()
 
 	cardWidthForPdf = float(textWidthCard.get())
@@ -120,7 +248,7 @@ def beginProcess():
 					break
 			if checkCardBackStyle.get() == 0:
 				pdf.add_page()
-				currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = int(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = int(textCardsSpaceBetweenOnVertical.get()))
+				currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = int(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = int(textCardsSpaceBetweenOnVertical.get()),shiftBack = int(shiftCardBackText.get()))
 				for card in range(currentCardsPerPage):
 					newPos = currentPage.getLastFreePos()
 					pdf.image(pathOfTemplatesImages + "cardBack.jpg",x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
@@ -130,7 +258,7 @@ def beginProcess():
 			for card in range(currentCardsPerPage):
 				newPos = currentPage.getLastFreePos()
 				pdf.image(pathOfTemplatesImages + "cardBack.jpg",x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
-		pdf.output(str(pathToSavePdf )+slashs+pdfFileName) #windows shit
+		pdf.output(str(pathToSavePdf )+slashs+pdfFileName)
 		if deleteTeplatesFiles.get() == 1:
 			deleteAllTmps()
 		messagebox.showinfo("Состояние процесса", "Преобразование готово")
@@ -146,7 +274,6 @@ window.title("TTSToPdf")
 
 deleteTeplatesFiles = IntVar()
 checkCardBackStyle = IntVar()
-
 
 countCardInFileHorizontalLabel = Label(window, text="Количество карт в файле по горизонтали")
 countCardInFileHorizontalLabel.grid(column=0, row=0)
@@ -237,15 +364,53 @@ radioButtonNoGenerate.grid(column = 1,row = 17)
 emptyRow = Label(window, text="")
 emptyRow.grid(column=0, row=18)
 
+shiftCardBackLabel = Label(window, text="Смещение обложек(вертикаль в мм)")
+shiftCardBackLabel.grid(column=0, row=19)
+shiftCardBackText = Entry(window,width=10)
+shiftCardBackText.grid(column=1,row=19)
+
+
+
+emptyRow = Label(window, text="")
+emptyRow.grid(column=0, row=20)
+
 selectImageButton = Button(window, text="Выбрать файл" ,command = selectImage)
-selectImageButton.grid(column=0, row=19)
+selectImageButton.grid(column=0, row=21)
 textImageCard = Entry(window,width=10)
-textImageCard.grid(column=1, row=19)
+textImageCard.grid(column=1, row=21)
 
 startProcess = Button(window, text="Преобразовать" ,command = beginProcess)
-startProcess.grid(column=0, row=20)
+startProcess.grid(column=0, row=22)
+
+#вот здесь вторая секция для сшивания отдельных изображений в один пдф
+
+
+#emptyColumn
+
+emptyColumn = Label(window, text = '', bg = "red" )
+emptyColumn.grid(column = 2,row = 0, rowspan = 22)
+
+
+#path to shredded images
+
+secondSectionColumn = 3
+
+#folder with images
+selectFolderOfMultipleImagesButton = Button(window, text="Выбрать папку\nс отдельными изображениями" ,command = selectFolderWithMultipleImages)
+selectFolderOfMultipleImagesButton.grid(column=secondSectionColumn, row=0)
+textFolderOfMultipleImages = Entry(window,width=10)
+textFolderOfMultipleImages.grid(column=secondSectionColumn+1, row=0)
+
+
+#file of cards back
+selectCardBackButton = Button(window, text="Выбрать изображение\nрубашки карты" ,command = selectBackImage)
+selectCardBackButton.grid(column=secondSectionColumn, row=1)
+textOfCardBackImages = Entry(window,width=10)
+textOfCardBackImages.grid(column=secondSectionColumn+1, row=1)
+
+sewCardsButton = Button(window, text="Сшить карты в PDF" ,command = sew2)
+sewCardsButton.grid(column=secondSectionColumn, row=2)
 
 window.mainloop()
-
 
 #end gui section
