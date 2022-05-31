@@ -34,7 +34,9 @@ else:
 pathOfCardsBack = ""
 def selectBackImage():
 	global pathOfCardsBack
-	pathOfCardsBack = str(filedialog.askopenfilename())
+	tmpPathOfCardsBack = str(filedialog.askopenfilename())
+	if platform.system() == 'Windows':
+		pathOfCardsBack = tmpPathOfCardsBack.replace('/','\\')
 	textOfCardBackImages.delete(0,END)
 	textOfCardBackImages.insert(0,pathOfCardsBack)
 
@@ -83,6 +85,11 @@ def sewCards():
 			listOfImagesPath.append(str(pathOfFolderWithMultipleImages +slashs+ file))
 	if pathOfCardsBack in listOfImagesPath:
 		listOfImagesPath.remove(pathOfCardsBack)
+		print("Back deleted")
+		for i in listOfImagesPath:
+			print(i)
+	else:
+		print("Back not found")
 
 	countOfCards = len(listOfImagesPath)
 	
@@ -129,9 +136,23 @@ def sew2():
 	listOfImagesPath = []
 	for file in filelist:
 		if file.endswith(".png") or file.endswith(".jpg") :
-			listOfImagesPath.append(str(pathOfFolderWithMultipleImages +slashs+ file))
+			if platform.system() == 'Windows':
+				print("Windows")
+				listOfImagesPath.append(str(pathOfFolderWithMultipleImages +slashs+ file).replace("/","\\"))
+			else:
+				listOfImagesPath.append(str(pathOfFolderWithMultipleImages +slashs+ file))
+	print(pathOfCardsBack + "\tcard back")
+	
 	if pathOfCardsBack in listOfImagesPath:
 		listOfImagesPath.remove(pathOfCardsBack)
+		print("Back deleted")
+		for i in listOfImagesPath:
+			print(i)
+	else:
+		print("Back not found")
+		for i in listOfImagesPath:
+			print(i)
+		
 
 	countOfCards = len(listOfImagesPath)
 
@@ -142,10 +163,10 @@ def sew2():
 
 	pdf = FPDF()
 
-	img = cv2.imread(imageToConvertPath)
+	#img = cv2.imread(imageToConvertPath)
 	
-	countOfCardsOnHorizontalInFile = int(textCountCardInFileHorizontal.get())
-	countOfCardsOnVerticalInFile = int(textCountCardInFileOnVertical.get())
+	#countOfCardsOnHorizontalInFile = int(textCountCardInFileHorizontal.get())
+	#countOfCardsOnVerticalInFile = int(textCountCardInFileOnVertical.get())
 
 	cntOfCards = len(listOfImagesPath)
 
