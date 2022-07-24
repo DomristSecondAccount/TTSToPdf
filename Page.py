@@ -39,7 +39,7 @@ class SinglePage:
 					if y == 0 and x == 0:
 						self.positions.append(Position(leftBorder,upBorder))
 					else:
-						self.positions.append(Position(leftBorder + x* (cardWidth + int(spaceBetweenOnHorizontal)),upBorder + y *(cardHeight+ int(spaceBetweenOnVertical))))
+						self.positions.append(Position(leftBorder + x* (cardWidth + int(spaceBetweenOnHorizontal)),upBorder + y *(cardHeight+ float(spaceBetweenOnVertical))))
 					nextColCardIndex+=1
 				nextColCardIndex = 0
 	def isPageFull(self):

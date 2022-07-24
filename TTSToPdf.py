@@ -178,7 +178,7 @@ def sew2():
 	while cntOfCards > 0:
 
 		pdf.add_page()
-		currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = int(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = int(textCardsSpaceBetweenOnVertical.get()))
+		currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = float(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = float(textCardsSpaceBetweenOnVertical.get()))
 		for card in range(currentCardsPerPage):
 			if cntOfCards > 0:
 				newPos = currentPage.getLastFreePos()
@@ -189,19 +189,39 @@ def sew2():
 				break
 		if checkCardBackStyle.get() == 0:
 			pdf.add_page()
-			currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = int(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = int(textCardsSpaceBetweenOnVertical.get()),shiftBack = int(shiftCardBackText.get()))
+			currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = float(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = float(textCardsSpaceBetweenOnVertical.get()),shiftBack = int(shiftCardBackText.get()))
 			for card in range(currentCardsPerPage):
 				newPos = currentPage.getLastFreePos()
 				pdf.image(pathOfCardsBack,x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
 	if checkCardBackStyle.get() == 1:
 		pdf.add_page()
-		currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = int(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = int(textCardsSpaceBetweenOnVertical.get()))
+		currentPage = SinglePage(  cardWidthForPdf,cardHeigthForPdf ,cardCountOnHorizontal = int(countCardOnHorizontalText.get()),cardCountOnVertical = int(countCardOnVerticalText.get()),spaceBetweenOnHorizontal = float(textCardsSpaceBetweenOnHorizontal.get()),spaceBetweenOnVertical = float(textCardsSpaceBetweenOnVertical.get()))
 		for card in range(currentCardsPerPage):
 			newPos = currentPage.getLastFreePos()
 			pdf.image(pathOfCardsBack,x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
 	pdf.output(str(pathOfFolderWithMultipleImages)+slashs+"myNew.pdf")
+
 	
-	messagebox.showinfo("Состояние процесса", "Преобразование готово")
+	messagebox.showinfo("Состояние процесса", "Преобразование готово,файл сохранён в " + str(pathOfFolderWithMultipleImages)+"/" + "myNew.pdf")
+
+def addCrossesTocard(pdfFile,cardPosition,cardWidth,cardHeight):
+	
+	'''
+	pdfFile.image("cross.png",cardPosition[0] - cardWidth/2,cardPosition[1] - cardHeight/2,10,10)
+	pdfFile.image("cross.png",cardPosition[0] + cardWidth/2,cardPosition[1] - cardHeight/2,10,10)
+	pdfFile.image("cross.png",cardPosition[0] - cardWidth/2,cardPosition[1] + cardHeight/2,10,10)
+	pdfFile.image("cross.png",cardPosition[0] + cardWidth/2,cardPosition[1] + cardHeight/2,10,10)
+	'''
+	pdfFile.image("cross.png",cardPosition[0]-5,cardPosition[1]-5,10,10)
+	pdfFile.image("cross.png",cardPosition[0]-5 + cardWidth,cardPosition[1]-5 ,10,10)
+	
+	pdfFile.image("cross.png",cardPosition[0]-5 , cardPosition[1]-5 + cardHeight ,10,10)
+
+	pdfFile.image("cross.png",cardPosition[0]-5 + cardWidth , cardPosition[1]-5 + cardHeight ,10,10)
+	#pdfFile.image("cross.png",cardPosition[0] + cardWidth,cardPosition[1] + cardHeight,10,10)
+	
+
+
 
 def beginProcess():
 	countOfCards = textCountCard.get()
@@ -258,6 +278,8 @@ def beginProcess():
 					cv2.imwrite(pathOfTemplatesImages + fileName+str(imageIndex)+".png",crop)
 					newPos = currentPage.getLastFreePos()
 					pdf.image(pathOfTemplatesImages+fileName+str(imageIndex)+".png",x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
+					#addCrossesTocard for test
+					addCrossesTocard(pdf,newPos,cardWidthForPdf,cardHeigthForPdf)
 					currentCardIndex += 1
 					imageIndex += 1																				
 					if currentCardIndex == (countOfCardsOnHorizontalInFile + 1):
