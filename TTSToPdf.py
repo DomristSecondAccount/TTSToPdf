@@ -183,6 +183,7 @@ def sew2():
 			if cntOfCards > 0:
 				newPos = currentPage.getLastFreePos()
 				pdf.image(listOfImagesPath[currentCardIndex],x=newPos[0],y=newPos[1],w=cardWidthForPdf,h=cardHeigthForPdf)
+				addCrossesTocard(pdf,newPos,cardWidthForPdf,cardHeigthForPdf)
 				currentCardIndex += 1
 				cntOfCards-=1
 			else:
