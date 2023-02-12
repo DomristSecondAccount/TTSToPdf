@@ -25,32 +25,3 @@
 
 ___________________________
 Код плохой? Интерфейс неудобный? - дай совет! пиши в телеграмм  - @steelcatanaboi 
-
-
-
-
-__________________________
-
-# TTSToPdf
-Converter of deck files from TTS to pdf for subsequent convenient printing
-
-The resulting .pdf file will be saved to the same folder where the converted picture of the deck of cards is located
-
-# How to use?
-
-Specify how many cards you need to convert
-
-Specify the size of the cards (width and height) in millimeters. If you need to set a fractional number, write through a dot
-Example: 55.8
-
-Specify the number of cards horizontally and vertically
-
-Select the file to convert by clicking on the file selection button
-
-After setting all the parameters, click convert
-
-The converted pdf file will be saved to the same folder where the converted image is located
-
-
-___________________________
-The code is shit? The interface is bullshit? - give me some advice! write in telegram - @steelcatanaboi
